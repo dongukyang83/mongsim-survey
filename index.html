@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>몽심 · 내 일 고르기</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+/* A안 크림 스티커: 몽심 쇼핑백 스티커의 크림 원 · 손그림 점선 · 하늘색 구름. 10문항을 한 화면에 나열 */
+:root{--bg:#FBF6EA;--card:#FFFFFF;--ink:#2C2C2A;--sub:#77736A;--line:#D9D2C2;--dash:#B4B2A9;--sky:#378ADD;--skyl:#85B7EB;--skybg:#E6F1FB;--track:#EDE5D2;
+  --f:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f);-webkit-text-size-adjust:100%}
+body{padding:0 max(16px,env(safe-area-inset-right,0px)) calc(40px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:520px;margin:0 auto}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding:14px 0 12px}
+.top .row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.top b{font-size:17px;font-weight:800;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.top b svg{width:22px;height:14px}
+.top span{font-size:14px;font-weight:600;color:var(--sub);font-variant-numeric:tabular-nums}
+.top span em{font-style:normal;font-weight:800;color:var(--sky)}
+.bar{height:6px;background:var(--track);border-radius:6px;margin-top:10px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--skyl);border-radius:6px;transition:width .3s}
+h1{font-size:28px;line-height:1.3;font-weight:800;letter-spacing:-.04em;margin:18px 0 8px;text-wrap:balance}
+h1 em{font-style:normal;color:var(--sky)}
+.lead{font-size:15px;line-height:1.6;color:var(--sub);margin:0 0 18px}
+.q{background:var(--card);border:1.5px dashed var(--dash);border-radius:20px;padding:16px 16px 16px;margin-top:12px;transition:border-color .2s}
+.q.done{border-style:solid;border-color:var(--skyl)}
+.q .n{font-size:12px;font-weight:800;color:var(--sky);letter-spacing:.04em}
+.q p{font-size:17px;font-weight:700;line-height:1.4;letter-spacing:-.03em;margin:4px 0 4px}
+.q small{display:block;font-size:13px;color:var(--sub);margin-bottom:10px}
+.q.hot{background:var(--skybg);border-color:var(--skyl)}
+.q.hot .n::after{content:" · 제일 중요해요"}
+.ch{display:flex;flex-wrap:wrap;gap:7px}
+.ch button{font:inherit;font-size:15px;font-weight:600;padding:9px 14px;border:1.5px solid var(--line);border-radius:999px;background:var(--card);color:var(--ink);cursor:pointer;min-height:42px}
+.ch button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.ch button:focus-visible,textarea:focus-visible,input:focus-visible,.go:focus-visible{outline:3px solid var(--skyl);outline-offset:2px}
+textarea,input[type=text]{width:100%;font:inherit;font-size:16px;padding:12px 14px;border:1.5px solid var(--line);border-radius:14px;background:var(--bg);color:var(--ink);resize:vertical}
+textarea{min-height:64px}
+.etc{margin-top:8px}
+.sec{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:800;color:var(--sub);margin:28px 0 0}
+.sec::after{content:"";flex:1;border-top:1.5px dashed var(--dash)}
+.go{display:block;width:100%;margin-top:22px;font:inherit;font-size:17px;font-weight:800;padding:17px;border:0;border-radius:999px;background:var(--ink);color:var(--bg);cursor:pointer}
+.go:disabled{background:var(--track);color:var(--sub);cursor:default}
+.msg{font-size:14px;color:#A32D2D;margin-top:10px;min-height:20px;text-align:center}
+.thanks{padding-top:48px}
+.thanks .stk{width:120px;height:120px;border-radius:50%;background:#FFF9E6;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;margin-bottom:20px}
+.thanks h1{font-size:30px}
+@media (prefers-reduced-motion:reduce){.bar i,.q{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><div class="row"><b><svg viewBox="0 0 22 14" aria-hidden="true"><path d="M6 13h11a4 4 0 0 0 .4-8A5.5 5.5 0 0 0 7 4.2 4.4 4.4 0 0 0 6 13z" fill="#85B7EB"/></svg>MongSim</b><span id="cnt">남은 <em>12</em>개</span></div><div class="bar"><i id="bar"></i></div></div>
+
+  <main id="form">
+    <h1>오늘, <em>내 일</em>을<br>골라 볼까요?</h1>
+    <p class="lead">대부분 고르기만 하면 돼요. 여러 개 골라도 돼요. 한 줄 칸은 모르면 비워 두세요. 이름은 받지 않아요.</p>
+
+    <div class="q" id="q-store"><div class="n">먼저</div><p>어느 매장에서 일하세요?</p><div class="ch" data-single></div></div>
+    <div class="q" id="q-role"><div class="n">먼저</div><p>내 자리는?</p><small>팀장·매니저는 더 가까운 쪽을 골라요</small><div class="ch" data-single></div></div>
+
+    <div id="qs"></div>
+    <button class="go" id="send" type="button" disabled>보내기</button>
+    <div class="msg" id="msg" role="status"></div>
+  </main>
+
+  <section class="thanks" id="thanks" hidden>
+    <div class="stk"><svg viewBox="0 0 22 14" width="64" height="42" aria-hidden="true"><path d="M6 13h11a4 4 0 0 0 .4-8A5.5 5.5 0 0 0 7 4.2 4.4 4.4 0 0 0 6 13z" fill="#85B7EB"/></svg></div>
+    <h1>고마워요.<br>오늘 고른 게 <em>기록의 첫 줄</em>이에요.</h1>
+    <p class="lead">9번이 비었다면, 그 일이 우리가 먼저 정리할 일이에요.</p>
+  </section>
+</div>
+
+<script>
+/* ── 구글 설문지 연결: 설문지를 만든 뒤 ID와 entry 번호를 채워요 ── */
+var FORM = {
+  id: "1FAIpQLSdjnhXkJdbT3qbgace_y_PfYcxh2Xpw0ju-GMvw2EP3xGTBCg",   // 몽심 워크숍 · 내 일 고르기 (응답 저장용)
+  store: "176069240", role: "1510287884",
+  q: ["1070165956","372692515","600685525","1587035783","359722320","726569839","129884052","442163831","2069691241","762342730"]
+};
+
+var STORES = ["한남대","대흥","도안","케이크샵"];
+var ROLES = ["생산 (제빵·제과)","홀 (판매)"];
+var SETS = {
+  "생산 (제빵·제과)": [
+    ["가장 오래 걸리는 일은?", ["계량·반죽","성형·오븐","포장","청소·마감","발주·재고","기타"]],
+    ["출근해서 제일 먼저 확인하는 것은?", ["생산 계획","재료","단톡 공지","오븐 온도","입고","기타"]],
+    ["오늘 몇 개 만들지, 어떻게 정해요?", ["팀장 지시","어제 기준","내 감","품절 보고","잘 모름"]],
+    ["매일 적거나 단톡에 올리는 것은?", ["생산 수량","불량·손실","재료 사용","입고","온도","없음"]],
+    ["불량·손실이 나면 어떻게 남겨요?", ["단톡","종이","말로","안 남겨요"]],
+    ["재료가 떨어진 걸 언제 알아요?", ["쓰다가","재고 볼 때","팀장이 말해서","기타"]],
+    ["홀에 넘기는 수량은 어떻게 전해요?", ["말로","단톡","종이","안 전해요"]],
+    ["신입에게 설명하기 제일 어려운 일", null, "한 줄로 적어요"],
+    ["나만 아는 판단 기준", null, "예: 반죽이 이러면 이렇게 해요 · 모르면 비워요", true],
+    ["AI에게 맡기고 싶은 일 하나", null, "한 줄로 적어요"]
+  ],
+  "홀 (판매)": [
+    ["가장 오래 걸리는 일은?", ["포장·선물","단체·예약","전화","진열","청소·마감","환불·교환","기타"]],
+    ["출근해서 제일 먼저 확인하는 것은?", ["받은 수량","쇼케이스","단체·예약","단톡 공지","시재","기타"]],
+    ["받은 빵 수량은 어떻게 확인해요?", ["직접 세요","생산팀 말","단톡","종이"]],
+    ["매일 적거나 단톡에 올리는 것은?", ["받은 수량","품절 시간","폐기·서비스","단체 주문","손님 요청","없음"]],
+    ["품절되면 어떻게 해요?", ["생산팀에 말","단톡","손님께 안내만","기록 안 해요"]],
+    ["폐기·서비스는 언제 기록해요?", ["그때그때","마감 때 기억으로","안 해요"]],
+    ["단체·예약 주문은 어디에 적어요?", ["단톡","종이","포스","달력","기타"]],
+    ["손님이 제일 자주 묻는 것", null, "예: 오늘 소금빵 몇 시에 나와요?"],
+    ["나만 아는 판단 기준", null, "예: 이런 요청엔 이렇게 해요 · 모르면 비워요", true],
+    ["AI에게 맡기고 싶은 일 하나", null, "한 줄로 적어요"]
+  ]
+};
+
+var ans = {store:"", role:"", q:[]};
+function $(s,r){return (r||document).querySelector(s);}
+
+function chips(box, opts, single, onChange){
+  opts.forEach(function(o){
+    var b=document.createElement("button"); b.type="button"; b.textContent=o; b.setAttribute("aria-pressed","false");
+    b.addEventListener("click",function(){
+      if(single){[].forEach.call(box.children,function(x){x.setAttribute("aria-pressed","false");}); b.setAttribute("aria-pressed","true");}
+      else b.setAttribute("aria-pressed", b.getAttribute("aria-pressed")==="true"?"false":"true");
+      onChange([].filter.call(box.querySelectorAll("button"),function(x){return x.getAttribute("aria-pressed")==="true";}).map(function(x){return x.textContent;}));
+    });
+    box.appendChild(b);
+  });
+}
+
+chips($("#q-store .ch"), STORES, true, function(v){ans.store=v[0]||""; $("#q-store").classList.toggle("done",!!ans.store); tally();});
+chips($("#q-role .ch"), ROLES, true, function(v){ if(ans.role!==v[0]){ans.role=v[0]; build();} $("#q-role").classList.add("done"); tally();});
+
+function build(){
+  var box=$("#qs"); box.textContent=""; ans.q=[];
+  var h=document.createElement("div"); h.className="sec"; h.textContent=(ans.role.indexOf("생산")===0?"생산":"홀")+" · 질문 10개"; box.appendChild(h);
+  SETS[ans.role].forEach(function(item,i){
+    ans.q[i]={pick:[],etc:"",text:""};
+    var c=document.createElement("div"); c.className="q"+(item[3]?" hot":"");
+    var n=document.createElement("div"); n.className="n"; n.textContent=String(i+1).padStart(2,"0"); c.appendChild(n);
+    var p=document.createElement("p"); p.textContent=item[0]; c.appendChild(p);
+    if(item[1]){
+      var s=document.createElement("small"); s.textContent="여러 개 골라도 돼요"; c.appendChild(s);
+      var ch=document.createElement("div"); ch.className="ch"; c.appendChild(ch);
+      var etc=null;
+      if(item[1].indexOf("기타")>=0){etc=document.createElement("input"); etc.type="text"; etc.className="etc"; etc.id="etc"+i; etc.placeholder="기타 내용 (선택)"; etc.hidden=true;
+        etc.addEventListener("input",function(){ans.q[i].etc=etc.value.trim();});}
+      chips(ch,item[1],false,function(v){ans.q[i].pick=v; if(etc){etc.hidden=v.indexOf("기타")<0;} c.classList.toggle("done",v.length>0); tally();});
+      if(etc) c.appendChild(etc);
+    } else {
+      var s2=document.createElement("small"); s2.textContent=item[2]; c.appendChild(s2);
+      var t=document.createElement("textarea"); t.id="t"+i; t.rows=2; t.placeholder="여기에 적어요";
+      t.addEventListener("input",function(){ans.q[i].text=t.value.trim(); c.classList.toggle("done",!!ans.q[i].text); tally();});
+      c.appendChild(t);
+    }
+    box.appendChild(c);
+  });
+  tally();
+}
+
+function tally(){
+  var total=12, done=(ans.store?1:0)+(ans.role?1:0);
+  ans.q.forEach(function(a){ if(a.pick.length||a.text) done++; });
+  $("#cnt").innerHTML="";
+  var e=document.createElement("em"); e.textContent=String(total-done);
+  $("#cnt").append("남은 ",e,"개");
+  $("#bar").style.width=(done/total*100)+"%";
+  $("#send").disabled=!(ans.store&&ans.role);
+}
+
+function val(a){ if(a.text) return a.text; var v=a.pick.slice(); if(a.etc){var k=v.indexOf("기타"); if(k>=0) v[k]="기타: "+a.etc;} return v.join(", "); }
+
+$("#send").addEventListener("click",function(){
+  var btn=this; $("#msg").textContent="";
+  if(!FORM.id){ $("#msg").textContent="아직 설문지가 연결되지 않았어요. 담당자에게 알려 주세요."; return; }
+  var body=new URLSearchParams();
+  body.append("entry."+FORM.store, ans.store);
+  body.append("entry."+FORM.role, ans.role);
+  ans.q.forEach(function(a,i){ if(FORM.q[i]) body.append("entry."+FORM.q[i], val(a)); });
+  btn.disabled=true; btn.textContent="보내는 중…";
+  fetch("https://docs.google.com/forms/d/e/"+FORM.id+"/formResponse",{method:"POST",mode:"no-cors",body:body})
+    .then(function(){ $("#form").hidden=true; $("#thanks").hidden=false; window.scrollTo(0,0); $("#cnt").textContent="완료"; $("#bar").style.width="100%"; })
+    .catch(function(){ btn.disabled=false; btn.textContent="보내기"; $("#msg").textContent="전송이 안 됐어요. 와이파이나 데이터를 확인하고 다시 눌러 주세요."; });
+});
+tally();
+</script>
+</body>
+</html>
